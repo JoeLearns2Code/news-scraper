@@ -47,20 +47,20 @@ app.get("/scrape", function (req, res) {
     axios.get("https://www.allsides.com/unbiased-balanced-news").then(function (response) {
         var $ = cheerio.load(response.data)
         //Create an object with headline, summary, and link to the article
-        $(".story-title-description").each(function (i, element) {
+        $(".allsides-daily-topic-container").each(function (i, element) {
             //Empty object for results
             var result = {};
             //h2's contain the title
             result.headline = $(this)
-                .find("h2")
+                .find(".news-title a")
                 .text();
             //p contains the story summary
             result.summary = $(this)
-                .find("p")
+                .find(".news-body p")
                 .text();
             //a href contains the link
             result.link = $(this)
-                .find("a")
+                .find(".news-title a")
                 .attr("href");
 
             //Create new article list using the result object
@@ -129,8 +129,8 @@ app.post("/articles/:id", function(req, res) {
 
 
 //TODO: Route for deleting Note
-app.post("/articles/:id", function(req, res) {
-    db.Note.destroy(req.body)
+app.delete("/articles/:id", function(req, res) {
+    db.Note.remove(req.body)
     .then(function(dbNote) {
         return db.Article.findOneAndRemove({_id: req.params.id}, {note:dbNote._id})
         .then(function(dbArticle) {
