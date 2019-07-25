@@ -75,6 +75,7 @@ app.get("/scrape", function (req, res) {
 
         //Send message to the client
         res.send("Scrape Complete");
+        res.json(dbArticle);
     });
 });
 
@@ -90,6 +91,8 @@ app.get("/articles", function (req, res) {
         })
 });
 
+//TODO: Route for clearing all articles
+
 
 //Route for grabbing a specific Article by id and populating it with any affiliated notes
 app.get("/articles/:id", function(req, res) {
@@ -102,6 +105,11 @@ app.get("/articles/:id", function(req, res) {
         res.json(err);
     })
 });
+
+//TODO: Route for getting all saved articles
+
+
+//TODO: Route for deleting a saved article
 
 
 //Route for saving and updating Note
