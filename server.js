@@ -30,7 +30,7 @@ app.use(express.static("public"));
 // Mongoose
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-
+mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 
@@ -50,29 +50,31 @@ app.get("/", (req, res) => {
 })
 
 app.get("/scrape", function (req, res) {
-    axios.get("https://www.allsides.com/unbiased-balanced-news").then(function (response) {
-        var $ = cheerio.load(response.data)
+    axios.get("https://quillette.com").then(function (response) {
+        const $ = cheerio.load(response.data)
         //Create an object with headline, summary, and link to the article
-        $(".allsides-daily-topic-container").each(function (i, element) {
+        $("h3.entry-title, h2.entry-title").each(function (i, element) {
             //Empty object for results
-            var result = {};
+            const result = {};
             //h2's contain the title
             result.headline = $(this)
-                .find(".news-title a")
                 .text();
+
             //p contains the story summary
             result.summary = $(this)
-                .find(".news-body p")
+                .siblings("p.summary")
                 .text();
-            //a href contains the link
-            result.link = $(this)
-                .find(".news-title a")
-                .attr("href");
 
+            result.link = $(this)
+                .children("a")
+                .attr("href");
+            // console.log(result);
+            // console.log()
+            // console
             //Create new article list using the result object
             db.Article.create(result)
                 .then(function (dbArticle) {
-                    console.log(dbArticle);
+                    //console.log(dbArticle);
                 })
                 .catch(function (err) {
                     console.log(err);
