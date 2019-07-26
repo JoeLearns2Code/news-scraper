@@ -1,20 +1,20 @@
 //NPM Dependencies
-var express = require("express");
-var logger = require("morgan");
-var mongoose = require("mongoose");
+const express = require("express");
+const logger = require("morgan");
+const mongoose = require("mongoose");
 
 //Scraping Tools
-var axios = require("axios");
-var cheerio = require("cheerio");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 // Require all models
-var db = require("./models");
+const db = require("./models");
 
 
-var PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //Initialize Express
-var app = express();
+const app = express();
 
 // Configure middleware
 
@@ -29,19 +29,25 @@ app.use(express.static("public"));
 
 // Mongoose
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 mongoose.connect(MONGODB_URI);
 
 
 
 //Handlebars
-var exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // ROUTES //
+
+//Route for index.handlebars as main page
+
+app.get("/", (req, res) => {
+    res.render("index");
+})
 
 app.get("/scrape", function (req, res) {
     axios.get("https://www.allsides.com/unbiased-balanced-news").then(function (response) {
@@ -96,7 +102,7 @@ app.get("/articles", function (req, res) {
 
 //Route for grabbing a specific Article by id and populating it with any affiliated notes
 app.get("/articles/:id", function(req, res) {
-    db.Article.find({_id:req.params.id})
+    db.Article.findOne({_id:req.params.id})
     .populate("note")
     .then(function(article) {
         res.json(article);
@@ -128,14 +134,11 @@ app.post("/articles/:id", function(req, res) {
 });
 
 
-//TODO: Route for deleting Note
+//Route for deleting Note
 app.delete("/articles/:id", function(req, res) {
-    db.Note.remove(req.body)
+    db.Note.remove()
     .then(function(dbNote) {
-        return db.Article.findOneAndRemove({_id: req.params.id}, {note:dbNote._id})
-        .then(function(dbArticle) {
-            res.json(dbArticle);
-        })
+      res.json(dbNote);
     })
     .catch(function(err) {
         res.json(err);
