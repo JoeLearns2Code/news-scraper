@@ -1,50 +1,29 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="/">Mongo Scraper</a>
-  <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false"
-    aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div class="main-heading text-center" style="background-color: #D3D3D3">
+  <h1 class="">News Scraper</h1>
+  <a class="btn" id="getArticles" style="color: white; background-color: #663399">Scrape for Articles</a>
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/saved">Saved Articles</a>
-      </li>
-      <li class="nav-item">
-        <a class="btn btn-danger scrape-new">Scrape New Articles</a>
-      </li>
-      <li class="nav-item">
-        <a class="btn btn-danger clear">Clear Articles</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+</div>
 
-{{!-- Container for populating scraped articles --}}
-<div class="container">
-  <div class="row" id="count">
-    <button type="submit" class="btn btn-danger mb-3" id="clear"><i class="fa fa-trash-o" aria-hidden="true"></i> clear articles</button>
+<div class="text-center" id="wrapper">
+  <div id="articles" class="card">
+    <h3 id="load" style="visibility:hidden" data-text="Loading…">Loading…</h1>
+      {{#each dbArticle}}
+      <div class="card-body">
+        <a target="_blank" class="card-title" href={{link}}>{{title}}</a>
+        <p data-toggle="modal" data-target="#notesModal" class="card-text" data-id={{_id}}>{{summary}}</p>
+      </div>
+      {{/each}}
   </div>
-  <div class="row">
-  <div class="card-columns scraped-articles">
-    {{#each articles}} 
-      {{#unless this.saved}}
-        <div class="card mb-1" style="width: 18rem;">
-          {{!-- <img class="card-img-top" src={{this.img_url}} alt="Card image cap"> --}}
-          <div class="card-body">
-            <h5 class="card-title">{{this.headline}}</h5>
-            <p class="card-text">{{this.summary}}</p>
-            <a href={{this.link}} class="btn btn-link">link</a>
-            <button type="submit" data-id={{this._id}} class="btn btn-success save" id="save">save</button>
-          </div>
-        </div>
-      {{/unless}}
-    {{/each}}
-  </div>
+</div>
+
+<div id="notesModal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="notes">
+      </div>
+      <div class='modal-footer'>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
 </div>
