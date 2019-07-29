@@ -1,7 +1,7 @@
 //Get articles as JSON
 $.getJSON("/articles", data => {
     for (let i = 0; i < data.length; i++) {
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].headline + "<br />" + data[i].summary + "<br />" + data[i].link + "</p>")
+        $("#articles").append("<p data-id='" + data[i]._id + "'>" + "<h2>" + data[i].headline + "</h2>" + "<br />" + data[i].summary + "<br />" + "<a href='" + data[i].link + "'>Read More</a></p>")
     }
 });
 
@@ -18,6 +18,19 @@ $(document).on("click", "#getArticles", () => {
         location.reload();
     });
     
+});
+
+//TODO: Delete an article
+$(document).on("click", ".deletearticle", function() {
+    var thisId = $(this).attr("data-id");
+    $.ajax({
+        method: "DELETE",
+        url: "/articles" + thisId
+    })
+    .then(data => {
+        console.log(data);
+        location.reload();
+    })
 });
 
 
@@ -42,7 +55,7 @@ $(document).on("click", "p", function () {
 
             //If there is a note attached to the article
             if (data.note) {
-                $("titleinput").val(data.note.title);
+                $("#titleinput").val(data.note.title);
                 $("#bodyinput").val(data.note.body);
             }
         });
