@@ -100,7 +100,7 @@ app.get("/articles", function (req, res) {
 });
 
 //TODO: Route for clearing articles
-app.get("/articles/:id", function(req, res) {
+app.post("/articles/:id", function(req, res) {
     db.Article.remove(function(err) {
         if(err) {
             res.send(err)
@@ -110,13 +110,13 @@ app.get("/articles/:id", function(req, res) {
 
 
 //Route for grabbing a specific Article by id and populating it with any affiliated notes
-app.get("/articles/:id", function(req, res) {
-    db.Article.findOne({_id:req.params.id})
+app.get("/articles/:id", (req, res) => {
+    db.Article.findOne({_id: req.params.id})
     .populate("note")
-    .then(function(article) {
-        res.json(article);
+    .then((dbArticle) => {
+        res.json(dbArticle);
     })
-    .catch(function(err) {
+    .catch((err) => {
         res.json(err);
     })
 });

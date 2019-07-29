@@ -1,7 +1,8 @@
 //Get articles as JSON
 $.getJSON("/articles", data => {
     for (let i = 0; i < data.length; i++) {
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + "<h2>" + data[i].headline + "</h2>" + "<br />" + data[i].summary + "<br />" + "<a href='" + data[i].link + "'>Read More</a></p>")
+        $("#articles").append("<p data-id='" + data[i]._id + "'>" + "<h2>" + data[i].headline + "</h2>" + "<br />" + data[i].summary + "<br />" + "<a href='" + data[i].link + "'>Read More</a></p>" + 
+        "<button type='button' id='addnote' width='10%' style='color: white; background-color: #663399'>Add Note</button>")
     }
 });
 
@@ -34,8 +35,9 @@ $(document).on("click", ".deletearticle", function() {
 });
 
 
-//When clicking on an article(p-tag) notes can be added
-$(document).on("click", "p", function () {
+//TODO: When clicking on #addnote notes can be added
+$(document).on("click", "#addnote", function () {
+    console.log("button click registered");
     $("#notes").empty();
 
     const thisId = $(this).attr("data-id");
