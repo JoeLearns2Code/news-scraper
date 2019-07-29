@@ -23,7 +23,7 @@ $(document).on("click", "#getArticles", () => {
 
 //TODO: Delete an article
 $(document).on("click", ".deletearticle", function() {
-    var thisId = $(this).attr("data-id");
+    const thisId = $(this).attr("data-id");
     $.ajax({
         method: "DELETE",
         url: "/articles" + thisId
@@ -41,6 +41,8 @@ $(document).on("click", "#addnote", function () {
     $("#notes").empty();
 
     const thisId = $(this).attr("data-id");
+    console.log("id: " + thisId)
+    //TODO: id is currently undefined
 
     //AJAX call for the article
     $.ajax({
@@ -49,6 +51,7 @@ $(document).on("click", "#addnote", function () {
 
     })
         .then((data) => {
+            console.log("data" + data);
             $("#notes").append("<h2>" + data.title + "</h2>");
             $("#notes").append("<input id='titleinput' name='title' >");
             $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
@@ -63,7 +66,7 @@ $(document).on("click", "#addnote", function () {
         });
 });
 
-//Save a note
+//Save a note into the article document
 $(document).on("click", "#savenote", function () {
     //current id
     const thisId = $(this).attr("data-id");
