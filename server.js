@@ -99,7 +99,14 @@ app.get("/articles", function (req, res) {
         })
 });
 
-//TODO: Route for clearing all articles
+//TODO: Route for clearing articles
+app.get("/articles/:id", function(req, res) {
+    db.Article.remove(function(err) {
+        if(err) {
+            res.send(err)
+        }
+    });
+});
 
 
 //Route for grabbing a specific Article by id and populating it with any affiliated notes
